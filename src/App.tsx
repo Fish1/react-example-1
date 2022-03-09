@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Todo from './components/Todo';
+
+let n = 0;
 
 function App() {
+
+  class TodoObj {
+    uid: number = n++;
+    title: string = "Example";
+  }
+
+  const [todoList, setTodoList] = useState<TodoObj[]>([]);
+
+  function deleteTodo(uid: number) {
+    setTodoList(todoList.filter((element) => {
+      return element.uid !== uid
+    }));
+  }
+  
+  function addTodo() {
+    const newTodoList = todoList.slice();
+    newTodoList.push(new TodoObj());
+    setTodoList(newTodoList);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>My Todo App</h1>
+      <button className='btn' onClick={addTodo}>Add Todo</button>
+        {todoList.map((element, index) => 
+          <Todo key={index} uid={element.uid} title={element.title} onDelete={deleteTodo}/>
+        )}
     </div>
   );
 }
